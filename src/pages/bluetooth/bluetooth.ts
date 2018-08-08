@@ -27,6 +27,7 @@ export class BluetoothPage {
   conexionMensajes: ISubscription;
   reader: Observable<any>;
   rawListener;
+  peso: any[] = [];
 
   constructor(
     private platform: Platform,
@@ -184,18 +185,19 @@ export class BluetoothPage {
   /**
    * Permite enviar mensajes de texto vía serial al conectarse por bluetooth.
    */
-  enviarMensajes() {
-    this.conexionMensajes = this.dataInOut(this.mensaje).subscribe(data => {
-      let entrada = data.substr(0, data.length - 1);
-      if (entrada != ">") {
-        if (entrada != "") {
-          console.log(`Entrada: ${entrada}`);
-          this.presentToast(entrada);
+  enviarMensajes() {    
+    this.bluetoothSerial.available().then((number:any) =>{
+      this.bluetoothSerial.read().then((data: any) => {
+        if(data != ""){
+          let sub_mensaje = data.split("+");
+          let peso = parseFloat(sub_mensaje[3]);
+          if(!Number.isNaN(peso)){
+            this.peso.push(peso);
+          }
         }
-      } else {
-        this.conexionMensajes.unsubscribe();
-      }
-      this.mensaje = "";
+        
+      });
+  
     });
   }
   /**

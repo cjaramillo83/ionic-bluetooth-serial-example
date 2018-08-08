@@ -48,4 +48,19 @@
     <p>No se han encontrado dispositivos, activa el bluetooth y desliza hacia abajo para volver a buscar</p>
   </div>
 
+
+  <ion-list>
+    <ion-item *ngIf="peso.length == 0">
+      Sin pesos
+    </ion-item>
+
+    <ion-item-sliding *ngFor="let pesito of peso; let i = index">
+
+      
+      <ion-item>
+        <p>{{ pesito }}</p>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+
 </ion-content>
