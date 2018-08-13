@@ -1,0 +1,35 @@
+<!--
+  Generated template for the CrearProductoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>CrearProducto</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  
+
+  <ion-item>
+      <ion-label stacked>PESO</ion-label>
+      <ion-input [(ngModel)]="pesito" type="text" name="pesito" [readonly]="true" #focusInput></ion-input>
+  </ion-item>
+
+  <ion-list>
+    <ion-item *ngIf="peso.length == 0">
+      Sin pesos
+    </ion-item>
+
+    <ion-item-sliding *ngFor="let pesito of peso; let i = index">      
+      <ion-item>
+        <p>{{ pesito }}</p>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 import { BluetoothPage } from './../pages/bluetooth/bluetooth';
+import { CrearProductoPageModule } from './../pages/crear-producto/crear-producto.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { BluetoothPage } from './../pages/bluetooth/bluetooth';
     BrowserModule,
     IonicModule.forRoot(MyApp, {
       preloadModules: true
-    })
+    }),
+    CrearProductoPageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

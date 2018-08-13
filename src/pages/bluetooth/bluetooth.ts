@@ -1,5 +1,5 @@
 import { Component, Injectable } from '@angular/core';
-import { IonicPage, Platform, ToastController, AlertController, Refresher } from 'ionic-angular';
+import { IonicPage, Platform, ToastController, AlertController, Refresher, NavController } from 'ionic-angular';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 import { Observable } from 'rxjs';
 import { ISubscription } from "rxjs/Subscription";
@@ -33,6 +33,7 @@ export class BluetoothPage {
     private platform: Platform,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
+    private nav: NavController,
     private bluetoothSerial: BluetoothSerial
   ) { }
   /**
@@ -162,8 +163,13 @@ export class BluetoothPage {
    */
   conectar(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
+      
       this.conexion = this.bluetoothSerial.connect(id).subscribe((data: Observable<any>) => {
-        this.enviarMensajes();
+        this.bluetoothSerial.subscribeRawData().subscribe((dt) =>{
+          this.bluetoothSerial.readUntil('\n').then((dd) => {
+            this.onDataReceive(dd);
+          })
+        });
         resolve("Conectado");
       }, fail => {
         console.log(`[3] Error conexión: ${JSON.stringify(fail)}`);
@@ -171,6 +177,19 @@ export class BluetoothPage {
       });
     });
   }
+
+  onDataReceive(data) {
+    if(data != ""){
+      let sub_mensaje = data.split("+");
+      let peso = parseFloat(sub_mensaje[3]);
+      if(!Number.isNaN(peso)){
+        this.peso.push(peso);
+        console.log(peso);
+      }
+    }
+    //console.log(JSON.stringify(dd));
+  }
+
   /**
    * Cierra el socket para la conexión con un dispositivo bluetooth.
    */
@@ -185,7 +204,14 @@ export class BluetoothPage {
   /**
    * Permite enviar mensajes de texto vía serial al conectarse por bluetooth.
    */
-  enviarMensajes() {    
+  enviarMensajes() {   
+    this.nav.push('CrearProductoPage')
+    /*this.bluetoothSerial.subscribeRawData().subscribe((dt) =>{
+      this.bluetoothSerial.readUntil('(').then((dd) => {
+        this.onDataReceive(dd);
+      })
+    });*/
+    /*
     this.bluetoothSerial.available().then((number:any) =>{
       this.bluetoothSerial.read().then((data: any) => {
         if(data != ""){
@@ -198,7 +224,7 @@ export class BluetoothPage {
         
       });
   
-    });
+    });*/
   }
   /**
    * Establece el socket para las comunicaciones seriales después de conectarse con un dispositivo
